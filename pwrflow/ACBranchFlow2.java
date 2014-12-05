@@ -15,35 +15,37 @@ import com.powerdata.openpa.PflowModelBuilder;
 import com.powerdata.openpa.tools.ComplexList;
 import com.powerdata.openpa.tools.PAMath;
 
-public class ACBranchFlow extends CalcBase
+public class ACBranchFlow2 extends CalcBase
 {
 	public float _sbase;
 	BusList _buses;
+//	BusRefIndex _bri;
 	ACBranchListIfc<? extends ACBranch> _branches;
-	int[] _f, _t;
+//	int[] _f, _t;
 	float[] _fp, _fq, _tp, _tq;
 	ComplexList _y;
 	
-	public ACBranchFlow(float sbase, BusRefIndex bndx,
+	public ACBranchFlow2(float sbase, BusRefIndex bri,
 			ACBranchListIfc<? extends ACBranch> branches, ComplexList y)
 			throws PAModelException
 	{
-		super(branches);
+//		super(branches);
 		_sbase = sbase;
-		_buses = bndx.getBuses();
+		_buses = bri.getBuses();
 		_branches = branches;
 		_y = y;
-		setup(bndx);
+//		setup(bndx);
 	}
 	
+	/*
 	void setup(BusRefIndex bndx) throws PAModelException
 	{
 		int[][] nmap = bndx.get2TBus(_branches);
 		_f = nmap[0];
 		_t = nmap[1];
 	}
-
-	public ACBranchFlow calc() throws PAModelException
+	*/
+	public ACBranchFlow2 calc() throws PAModelException
 	{
 		calc(PAMath.vmpu(_buses), PAMath.deg2rad(_buses.getVA()));
 		return this;
@@ -57,20 +59,20 @@ public class ACBranchFlow extends CalcBase
 		_tp = new float[n];
 		_fq = new float[n];
 		_tq = new float[n];
-		float[] ygbr = _y.re(), ybbr = _y.im();
+//		float[] ygbr = _y.re(), ybbr = _y.im();
 		try
 		{
-			int[] insvc = getInSvc();
-			int ninsvc = insvc.length;
-			float[] shift = PAMath.deg2rad(_branches.getShift()),
-					ftap = _branches.getFromTap(),
-					ttap = _branches.getToTap(),
-					bmagl = _branches.getBmag(),
-					fbch = _branches.getFromBchg(),
-					tbch = _branches.getToBchg();
-			for (int in = 0; in < ninsvc; ++in)
+//			int[] insvc = getInSvc();
+//			int ninsvc = insvc.length;
+//			float[] shift = PAMath.deg2rad(_branches.getShift()),
+//					ftap = _branches.getFromTap(),
+//					ttap = _branches.getToTap(),
+//					bmagl = _branches.getBmag(),
+//					fbch = _branches.getFromBchg(),
+//					tbch = _branches.getToBchg();
+			for (ACBranch b : _branches)
 			{
-				int i = insvc[in];
+//				int i = insvc[in];
 				int f = _f[i], t = _t[i];
 				float fvm = vmpu[f], tvm = vmpu[t], fva = varad[f], tva = varad[t];
 				float sh = fva - tva - shift[i];

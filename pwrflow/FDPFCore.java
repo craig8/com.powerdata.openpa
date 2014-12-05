@@ -36,10 +36,10 @@ import com.powerdata.openpa.impl.LoadSubList;
 import com.powerdata.openpa.pwrflow.CalcBase.BranchComposite;
 import com.powerdata.openpa.pwrflow.CalcBase.FixedShuntComposite;
 import com.powerdata.openpa.pwrflow.GenVarMonitors.BusConverter;
-import com.powerdata.openpa.tools.FactorizedBMatrix;
+import com.powerdata.openpa.tools.FactorizedFltMatrix;
 import com.powerdata.openpa.tools.LinkNet;
 import com.powerdata.openpa.tools.PAMath;
-import com.powerdata.openpa.tools.SpSymBMatrix;
+import com.powerdata.openpa.tools.SpSymFltMatrix;
 import com.powerdata.openpa.tools.SpSymMtrxFactPattern;
 import com.powerdata.openpa.pwrflow.RemoteVoltageMonitors.SetpointMgr;
 
@@ -54,7 +54,7 @@ public class FDPFCore
 	//TODO:  make configurable
 	float _minv = 0.5f, _maxv = 2f;
 	boolean _enatapadj = false, _enavarmon=true;
-	FactorizedBMatrix _bp, _bpp;
+	FactorizedFltMatrix _bp, _bpp;
 	BDblPrime _mbpp;
 	
 	/** index into energized Islands */
@@ -504,10 +504,10 @@ public class FDPFCore
 
 	class CorrectionsProc
 	{
-		Supplier<FactorizedBMatrix> bm;
+		Supplier<FactorizedFltMatrix> bm;
 		float[] state, mm;
 		
-		CorrectionsProc(Supplier<FactorizedBMatrix> bm, float[] mm,
+		CorrectionsProc(Supplier<FactorizedFltMatrix> bm, float[] mm,
 				float[] state)
 		{
 			this.bm = bm;
@@ -516,7 +516,7 @@ public class FDPFCore
 		}
 		void apply(float[] vm)
 		{
-			FactorizedBMatrix mtrx = bm.get();
+			FactorizedFltMatrix mtrx = bm.get();
 			int[] belim = mtrx.getElimBus();
 			for(int b : belim) mm[b] /= vm[b];
 			float[] t = mtrx.solve(mm);
@@ -815,12 +815,12 @@ public class FDPFCore
 		}
 	}
 	
-	protected FactorizedBMatrix getBp()
+	protected FactorizedFltMatrix getBp()
 	{
 		return _bp;
 	}
 	
-	protected FactorizedBMatrix getBpp()
+	protected FactorizedFltMatrix getBpp()
 	{
 		if (_mbpp.processSVCs() || _bpp == null)
 		{
@@ -1021,7 +1021,7 @@ public class FDPFCore
 		}
 	}
 	
-	class BPrime extends SpSymBMatrix
+	class BPrime extends SpSymFltMatrix
 	{
 		BPrime(MtrxBldr bldr)
 		{
@@ -1029,7 +1029,7 @@ public class FDPFCore
 		}
 	}	
 	
-	class BDblPrime extends SpSymBMatrix
+	class BDblPrime extends SpSymFltMatrix
 	{
 		float[] _bsvc;
 		SVCState[] _state;

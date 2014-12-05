@@ -15,7 +15,7 @@ import com.powerdata.openpa.PAModelException;
 import com.powerdata.openpa.PflowModelBuilder;
 import com.powerdata.openpa.tools.PAMath;
 
-public class FixedShuntCalc extends CalcBase
+public class FixedShuntCalc2 extends CalcBase
 {
 	float _sbase;
 	int[] _busndx;
